@@ -7,6 +7,11 @@ frontend/public/xfmail/** linguist-generated
 *_bg.js linguist-generated
 package-lock.json linguist-generated
 
+# Exclude generated CSS (Tailwind output)
+frontend/style/output.css linguist-generated
+**/output.css linguist-generated
+**/dist/*.css linguist-generated
+
 # Mark primary languages
 *.rs linguist-language=Rust
 *.toml linguist-language=TOML
