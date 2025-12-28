@@ -1,0 +1,70 @@
+[workspace]
+resolver = "2"
+members = ["backend", "frontend"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+
+[workspace.dependencies]
+# Backend dependencies
+axum = "0.8.7"
+axum-extra = { version = "0.10", features = ["typed-header", "cookie"] }
+tokio = { version = "1", features = ["full"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace", "fs"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "migrate"] }
+
+# Auth
+argon2 = "0.5"
+jsonwebtoken = "9"
+validator = { version = "0.19", features = ["derive"] }
+
+# Frontend dependencies
+leptos = "0.8.14"
+leptos_router = "0.8.9"
+leptos_meta = "0.8.5"
+
+# Shared
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+[[workspace.metadata.leptos]]
+# Project name
+name = "xfbraid"
+# Output name for JS/WASM bundle
+output-name = "xfbraid"
+# Site output directory
+site-root = "target/site"
+site-pkg-dir = "pkg"
+
+# Tailwind input
+tailwind-input-file = "frontend/style/main.css"
+tailwind-config-file = "frontend/tailwind.config.js"
+
+# Assets
+assets-dir = "frontend/public"
+# Serving address
+site-addr = "127.0.0.1:3000"
+reload-port = 3001
+# Browser query
+browserquery = "defaults"
+# Environment
+env = "DEV"
+# Bin/Lib features
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+
+# Packages
+bin-package = "backend"
+lib-package = "frontend"

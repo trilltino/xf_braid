@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+.gitmodules
+.github
+
+# Build artifacts
+target/
+dist/
+**/target/
+**/dist/
+node_modules/
+.trunk/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.log
+
+# Documentation (keep .md files for context, exclude large ones)
+*.tmp
+workspace_check.txt
+
+# Database (use mounted volumes instead)
+*.db
+*.db-shm
+*.db-wal
+
+# Test artifacts
+coverage/
+*.profdata
+
+# Rust
+**/*.rs.bk
+Cargo.lock
+**/Cargo.lock
+
+# Development scripts (keep deployment scripts)
+*-local.bat

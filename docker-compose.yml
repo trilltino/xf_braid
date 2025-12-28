@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Leptos website (main site)
+  leptos-site:
+    build:
+      context: .
+      dockerfile: Dockerfile.leptos
+    container_name: xf-braid-site
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - LEPTOS_TAILWIND_VERSION=${LEPTOS_TAILWIND_VERSION}
+    volumes:
+      - ./data.db:/app/data.db
+    restart: unless-stopped
+    networks:
+      - xf-network
+
+  # XFMail chat backend
+  xfmail-backend:
+    build:
+      context: ./xfmail
+      dockerfile: Dockerfile
+    container_name: xfmail-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=${XFMAIL_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVER_PORT=${SERVER_PORT}
+      - RUST_LOG=${RUST_LOG}
+      - DEV_AUTH_BYPASS=${DEV_AUTH_BYPASS}
+    restart: unless-stopped
+    networks:
+      - xf-network
+    depends_on:
+      - leptos-site
+
+networks:
+  xf-network:
+    driver: bridge

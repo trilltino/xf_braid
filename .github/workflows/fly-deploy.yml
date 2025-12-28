@@ -1,0 +1,38 @@
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only --ha=false 2>&1 | tee deploy.log
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      
+      - name: Verify Health
+        if: success()
+        run: |
+          sleep 20
+          curl -sf https://xfbraid.fly.dev/api/health || echo "Health check pending..."
+      
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-logs-${{ github.run_id }}
+          path: deploy.log
+          retention-days: 7
+          if-no-files-found: ignore

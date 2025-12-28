@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>XFMail Demo</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #1a1a2e;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        #loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #xfmail_canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+    <!-- Trunk will inject WASM bindings here -->
+    
+<script type="module">
+import init, * as bindings from '/xfmail/frontend-egui-aec192158cb436c5.js';
+const wasm = await init({ module_or_path: '/xfmail/frontend-egui-aec192158cb436c5_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+<link rel="modulepreload" href="/xfmail/frontend-egui-aec192158cb436c5.js" crossorigin="anonymous" integrity="sha384-mDG9J1TcaYPTQmjorYhpLjU+/eK8pbT4cAaKBjPLaPSEL/L5U0TYnGzcrnNvXH4u"><link rel="preload" href="/xfmail/frontend-egui-aec192158cb436c5_bg.wasm" crossorigin="anonymous" integrity="sha384-n7kv15tg+hOsvgLQyKw/+DFMFsnCSrMAfgeNifI6IMr5CkGOwpHkDACWx6IoS670" as="fetch" type="application/wasm"></head>
+
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading XFMail...</p>
+    </div>
+    <div id="error-display"
+        style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ff6b6b; text-align: center; font-family: monospace; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px; max-width: 80%;">
+        <h3>Error Occurred</h3>
+        <pre id="error-text" style="white-space: pre-wrap; word-break: break-all;"></pre>
+    </div>
+    <canvas id="xfmail_canvas"></canvas>
+
+    <script>
+        // Global error handler to show load failures on screen
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            const errorDisplay = document.getElementById('error-display');
+            const errorText = document.getElementById('error-text');
+            const loading = document.getElementById('loading');
+
+            loading.style.display = 'none';
+            errorDisplay.style.display = 'block';
+            errorText.textContent = `Message: ${msg}\nURL: ${url}\nLine: ${lineNo}:${columnNo}\nError: ${error}`;
+
+            return false;
+        };
+
+        // Capture unhandled promise rejections (e.g. failed fetches)
+        window.onunhandledrejection = function (event) {
+            const errorDisplay = document.getElementById('error-display');
+            const errorText = document.getElementById('error-text');
+            const loading = document.getElementById('loading');
+
+            loading.style.display = 'none';
+            errorDisplay.style.display = 'block';
+            errorText.textContent = `Unhandled Promise Rejection: ${event.reason}`;
+        };
+    </script>
+
+    <script>
+        // Hide loading indicator when canvas is ready
+        const canvas = document.getElementById('xfmail_canvas');
+        const loading = document.getElementById('loading');
+
+        // Check periodically if egui has started drawing
+        const checkInterval = setInterval(() => {
+            if (canvas.width > 0 && canvas.height > 0) {
+                loading.style.display = 'none';
+                clearInterval(checkInterval);
+            }
+        }, 100);
+
+        // Fallback: hide loading after 10 seconds
+        setTimeout(() => {
+            loading.style.display = 'none';
+            clearInterval(checkInterval);
+        }, 10000);
+    </script>
+</body>
+
+</html>

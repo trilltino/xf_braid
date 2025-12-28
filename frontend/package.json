@@ -1,0 +1,12 @@
+{
+    "name": "xf_braid",
+    "version": "1.0.0",
+    "description": "XFBraid - Real-time Collaboration Platform",
+    "scripts": {
+        "build:css": "npx tailwindcss -i ./style/main.css -o ./style/output.css --minify",
+        "watch:css": "npx tailwindcss -i ./style/main.css -o ./style/output.css --watch"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.4.0"
+    }
+}

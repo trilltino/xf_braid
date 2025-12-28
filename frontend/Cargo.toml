@@ -1,0 +1,42 @@
+[package]
+name = "frontend"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Leptos framework
+leptos.workspace = true
+leptos_router.workspace = true
+leptos_router_macro = "0.8.6"
+leptos_meta.workspace = true
+leptos_axum = { version = "0.8", optional = true }
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+uuid = { version = "1", features = ["v4", "js"] }
+
+# WASM specific
+wasm-bindgen = "=0.2.105"
+console_error_panic_hook = "0.1"
+web-sys = { version = "0.3", features = [
+    "Window",
+    "Document",
+    "Storage",
+    "console",
+] }
+gloo-net = "0.6"
+gloo-storage = "0.3"
+
+# Error handling
+thiserror = "2"
+http = "1"
+
+[features]
+default = []
+hydrate = ["leptos/hydrate"]
+ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr"]

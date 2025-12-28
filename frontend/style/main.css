@@ -1,0 +1,361 @@
+/* XFBraid - GTK-Inspired Theme with Tailwind */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Red Hat Display font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;400;500;700&display=swap');
+
+/* ================== Base Layer ================== */
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-display bg-gtk-bg text-white min-h-screen;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #3b3b3b;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #4b4b4b;
+    }
+}
+
+/* ================== Component Layer ================== */
+@layer components {
+
+    /* Application Container */
+    .app {
+        @apply flex flex-col min-h-screen;
+    }
+
+    .main-content {
+        @apply flex-1 w-full;
+    }
+
+    /* Container - GTK Style */
+    .container {
+        @apply max-w-[1140px] mx-auto px-4;
+    }
+
+    /* Navbar - GTK Style */
+    .navbar {
+        @apply flex justify-between items-center bg-gtk-bg h-12 px-4 sticky top-0 z-50;
+    }
+
+    .navbar-brand {
+        @apply flex items-center;
+    }
+
+    .navbar-brand a {
+        @apply text-[23px] font-bold text-white no-underline tracking-tight;
+    }
+
+    .navbar-brand a:hover {
+        @apply opacity-90;
+    }
+
+    .navbar-menu {
+        @apply flex items-center gap-1;
+    }
+
+    .navbar-menu a {
+        @apply text-sm font-normal text-white no-underline py-3 px-3 rounded transition-colors duration-150 ease-in-out;
+    }
+
+    .navbar-menu a:hover {
+        @apply bg-gtk-hover;
+    }
+
+    .navbar-menu a.active {
+        @apply bg-gtk-hover;
+    }
+
+    /* Hero Section - GTK Style */
+    .hero {
+        @apply relative py-24 overflow-hidden;
+        background: linear-gradient(to bottom, #151515 0%, #1a1a1a 100%);
+    }
+
+    .hero-left {
+        @apply text-left;
+    }
+
+    .hero-left .hero-content {
+        @apply max-w-[800px];
+    }
+
+    .hero::before {
+        content: '';
+        @apply absolute inset-0 pointer-events-none;
+        background:
+            radial-gradient(ellipse 50% 80% at 90% 50%, rgba(59, 134, 226, 0.08) 0%, transparent 50%);
+    }
+
+    /* Original centered title (kept for compatibility) */
+    .hero-title {
+        @apply text-[56px] font-light text-white mb-6 relative z-10 text-center;
+    }
+
+    /* New bold left-aligned title */
+    .hero-title-bold {
+        @apply text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 relative z-10 leading-[1.1];
+    }
+
+    .hero-subtitle {
+        @apply text-xl text-gray-400 mb-8 relative z-10 text-center;
+    }
+
+    /* New description text */
+    .hero-description {
+        @apply text-xl md:text-2xl text-gray-400 mb-10 relative z-10 font-light leading-relaxed max-w-2xl;
+    }
+
+    .hero-cta {
+        @apply flex flex-wrap gap-4 relative z-10;
+    }
+
+    /* Buttons - GTK Style */
+    .btn {
+        @apply inline-flex items-center justify-center px-6 py-3 font-display text-sm font-medium rounded border-0 cursor-pointer transition-all duration-150 ease-in-out no-underline shadow-sm hover:shadow;
+    }
+
+    .btn-primary {
+        @apply text-white;
+        background-color: #3b86e2;
+    }
+
+    .btn-primary:hover {
+        background-color: #2a75d1;
+    }
+
+    .btn-secondary {
+        @apply bg-gtk-hover text-white hover:bg-neutral-600;
+    }
+
+    .btn-accent {
+        @apply text-white;
+        background-color: #FF7800;
+    }
+
+    .btn-accent:hover {
+        background-color: #E66C00;
+    }
+
+    /* Cards - GTK Style */
+    .card {
+        @apply bg-gtk-card rounded p-6 border border-gtk-border hover:border-gtk-hover transition-colors duration-150 shadow-md hover:shadow-lg;
+    }
+
+    /* Sections */
+    .section {
+        @apply py-16;
+    }
+
+    .section-dark {
+        @apply bg-gtk-bg;
+    }
+
+    .section-light {
+        @apply text-gray-900;
+        background: linear-gradient(#f8f9fa, #ffffff);
+    }
+
+    /* Content Area with Scroll */
+    .scroll-area {
+        @apply overflow-y-auto;
+        scrollbar-gutter: stable;
+    }
+
+    /* Grid Layouts */
+    .feature-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    }
+
+    /* Badge */
+    .badge {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .badge-blue {
+        @apply bg-blue-500/20 text-blue-400;
+    }
+
+    .badge-green {
+        @apply bg-green-500/20 text-green-400;
+    }
+
+    /* Footer - GTK Style */
+    .footer {
+        @apply bg-gtk-bg py-16 border-t border-gtk-border mt-auto;
+    }
+
+    .footer-content {
+        @apply grid grid-cols-1 lg:grid-cols-4 gap-12;
+    }
+
+    /* Left Brand Column (Spans 1 col in large, but behaves nicely in flex) */
+    .footer-brand-col {
+        @apply flex flex-col gap-4;
+    }
+
+    .footer-logo {
+        @apply flex items-center gap-3 text-2xl font-bold text-white mb-2;
+    }
+
+    .logo-icon {
+        @apply text-3xl;
+    }
+
+    .footer-text {
+        @apply text-gray-400 text-sm leading-relaxed;
+    }
+
+    .footer-text.small {
+        @apply text-xs text-gray-500 mt-4;
+    }
+
+    .footer-copyright {
+        @apply text-gray-400 text-sm mt-2;
+    }
+
+    /* Links Grid (Spans 3 cols in large) */
+    .footer-links-grid {
+        @apply lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-8;
+    }
+
+    .footer-col {
+        @apply flex flex-col gap-6;
+    }
+
+    .footer-heading {
+        @apply text-sm font-bold text-gray-500 uppercase tracking-wider mb-2;
+    }
+
+    .footer-list {
+        @apply list-none p-0 m-0 flex flex-col gap-3;
+    }
+
+    .footer-link {
+        @apply text-gray-300 no-underline text-sm transition-colors hover:text-white font-medium;
+    }
+
+    .footer-text-item {
+        @apply text-gray-300 text-sm leading-relaxed;
+    }
+
+    .link-subtle {
+        @apply text-gray-300 hover:text-white underline decoration-gray-600 hover:decoration-white underline-offset-4;
+    }
+
+    .link-plain {
+        @apply text-white font-medium hover:underline;
+    }
+
+    .footer-socials {
+        @apply flex gap-4 mt-6;
+    }
+
+    .social-icon {
+        @apply w-8 h-8 flex items-center justify-center rounded bg-gtk-card text-gray-400 hover:text-white hover:bg-gtk-hover cursor-pointer transition-colors text-xs font-bold border border-gtk-border;
+    }
+
+    /* Language Selector */
+    .lang-selector {
+        @apply w-full max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden mt-8;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    .lang-tabs {
+        @apply flex bg-gtk-bg px-4 pt-2 border-b border-gray-700 space-x-1;
+    }
+
+    .lang-tab {
+        @apply px-6 py-3 text-sm font-medium text-gray-400 bg-transparent border-none cursor-pointer transition-all duration-200 rounded-t-lg relative;
+    }
+
+    .lang-tab:hover {
+        @apply text-white bg-white/5;
+    }
+
+    .lang-tab.active {
+        @apply text-white bg-gray-800;
+        /* Darker than body */
+    }
+
+    .lang-tab.active::after {
+        content: '';
+        @apply absolute bottom-0 left-0 w-full h-1 bg-blue-500 rounded-t;
+    }
+
+    .lang-code-window {
+        @apply bg-[#f8f9fa] p-8 border border-gray-200 min-h-[400px];
+    }
+
+    .code-content pre {
+        @apply m-0 p-0 text-sm leading-relaxed overflow-x-auto text-gray-800 font-mono;
+    }
+
+    /* Syntax Highlighting */
+    .hl-comment {
+        @apply text-[#2ec27e] italic;
+    }
+
+    .hl-keyword {
+        @apply text-[#1c71d8] font-bold;
+    }
+
+    .hl-string {
+        @apply text-[#26a269] font-medium;
+    }
+
+    .hl-func {
+        @apply text-[#000000] font-bold;
+    }
+
+    /* Info Cards */
+    .info-card {
+        @apply bg-white p-8 rounded-lg shadow-sm border border-gray-200 transition-all duration-200 h-full flex flex-col justify-between;
+    }
+
+    .info-card:hover {
+        @apply shadow-md border-gray-300 transform -translate-y-1;
+    }
+}
+
+/* ================== Responsive ================== */
+@media (max-width: 768px) {
+    .navbar {
+        @apply flex-col h-auto p-4 gap-2;
+    }
+
+    .navbar-menu {
+        @apply flex-wrap justify-center;
+    }
+
+    .hero-title {
+        @apply text-4xl;
+    }
+
+    .hero-subtitle {
+        @apply text-lg;
+    }
+}

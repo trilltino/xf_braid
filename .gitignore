@@ -1,0 +1,22 @@
+/target
+/node_modules
+
+# Environment files (NEVER COMMIT)
+.env
+.env.local
+*.env
+
+# Databases (contain user data)
+*.db
+*.db-shm
+*.db-wal
+data.db
+
+# Temporary debug files
+*_errors.txt
+build_*.txt
+workspace_*.txt
+compile_errors.json
+errors.log
+errors.txt
+full_output.txt
