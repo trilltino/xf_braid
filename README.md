@@ -246,22 +246,21 @@ XFMail uses Diamond-Types for conflict-free replicated data types:
 
 `xf_braid` implements a custom Rust client for the [Braid-HTTP](https://github.com/braid-org/braid-spec) protocol, enabling decentralized, peer-to-peer file synchronization.
 
-### Core Components
+### 1. Protocol Implementation
+*   **Custom Client**: The `xf_braid` client (`braid_fetch`) implements the Braid-HTTP protocol from scratch.
+*   **Subscriptions**: It sends `Subscribe: true` headers to initiate open-ended response streams, allowing the server to push updates (patches) in real-time without polling.
+*   **Headers**: It correctly handles `Version` (current state), `Parents` (causality), and `Patches` (delta updates) headers to ensure eventual consistency.
 
-1.  **Protocol Implementation** (`braid_fetch`):
-    -   Extends standard HTTP `GET` with `Subscribe: true` headers for open-ended response streams.
-    -   Parses multi-part byte ranges and custom Braid headers (`Version`, `Parents`, `Patches`).
-    -   Handles automatic reconnections and heartbeats.
+### 2. Hybrid Storage Engine
+To support both Desktop and Web targets with 1:1 parity, the storage layer is abstracted via the `BraidStorage` trait:
+*   **Abstraction**: A `BraidStorage` trait abstracts the underlying file system.
+*   **Desktop (Native)**: Uses `std::fs` to read/write directly to the user's disk (e.g., `~/http`) and `notify` to watch for external file changes.
+*   **Web (WASM)**: Uses a virtual file system on top of the browser's `LocalStorage`, allowing the same sync logic to run entirely in the browser.
 
-2.  **Hybrid Storage Engine**:
-    To support both Desktop and Web targets with 1:1 parity, the storage layer is abstracted via the `BraidStorage` trait:
-    -   **Native (Desktop)**: Uses `std::fs` and `notify` for filesystem events. Writes directly to the user's disk (default: `~/http`).
-    -   **Web (WASM)**: Uses `gloo_storage` to virtualize the filesystem within the browser's `LocalStorage`.
-
-3.  **Synchronization Logic**:
-    -   **Diffing**: Uses the Myers diff algorithm (via `dissimilar`) to compute minimal patch sets (Inserts/Deletes) for local edits, ensuring bandwidth efficiency.
-    -   **Versioning**: Tracks distributed state vectors using a persistent `VersionStore` (`versions.json`). This ensures proper conflict resolution by sending unambiguous `Parents` headers with every write.
-    -   **Loop Avoidance**: An internal `PendingWrites` registry prevents local file watchers from triggering infinite sync loops when applying remote updates.
+### 3. Synchronization Logic & Diffing
+*   **Efficiency**: Instead of sending full file contents, `xf_braid` uses the **Myers diff algorithm** (via the `dissimilar` crate) to compute minimal differences (Inserts/Deletes) between the local and remote versions.
+*   **Versioning**: A persistent `VersionStore` tracks the "Version Vector" (known states) to ensure that when you edit a file, the `Parents` you send correctly reflect the version you started with, preventing accidental overwrites (Conflict-Free).
+*   **Loop Avoidance**: An internal `PendingWrites` registry prevents local file watchers from triggering infinite sync loops when applying remote updates.
 
 ## Database Schema
 
