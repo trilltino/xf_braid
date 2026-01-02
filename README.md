@@ -242,6 +242,27 @@ XFMail uses Diamond-Types for conflict-free replicated data types:
 - `WS /realtime` - WebSocket subscription (Braid-HTTP)
 - `GET /api/* ` - REST endpoints
 
+## BraidFS Integration
+
+`xf_braid` implements a custom Rust client for the [Braid-HTTP](https://github.com/braid-org/braid-spec) protocol, enabling decentralized, peer-to-peer file synchronization.
+
+### Core Components
+
+1.  **Protocol Implementation** (`braid_fetch`):
+    -   Extends standard HTTP `GET` with `Subscribe: true` headers for open-ended response streams.
+    -   Parses multi-part byte ranges and custom Braid headers (`Version`, `Parents`, `Patches`).
+    -   Handles automatic reconnections and heartbeats.
+
+2.  **Hybrid Storage Engine**:
+    To support both Desktop and Web targets with 1:1 parity, the storage layer is abstracted via the `BraidStorage` trait:
+    -   **Native (Desktop)**: Uses `std::fs` and `notify` for filesystem events. Writes directly to the user's disk (default: `~/http`).
+    -   **Web (WASM)**: Uses `gloo_storage` to virtualize the filesystem within the browser's `LocalStorage`.
+
+3.  **Synchronization Logic**:
+    -   **Diffing**: Uses the Myers diff algorithm (via `dissimilar`) to compute minimal patch sets (Inserts/Deletes) for local edits, ensuring bandwidth efficiency.
+    -   **Versioning**: Tracks distributed state vectors using a persistent `VersionStore` (`versions.json`). This ensures proper conflict resolution by sending unambiguous `Parents` headers with every write.
+    -   **Loop Avoidance**: An internal `PendingWrites` registry prevents local file watchers from triggering infinite sync loops when applying remote updates.
+
 ## Database Schema
 
 ### Leptos
